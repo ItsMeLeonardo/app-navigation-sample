@@ -3,9 +3,12 @@ package com.example.partial.presentation.navigation
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Text
@@ -119,11 +122,10 @@ fun ScaffoldWithDrawer(
                             .padding(16.dp),
                         contentAlignment = Alignment.CenterStart
                     ) {
-                        Text(
-                            text = "🍔",
-                            fontSize = 24.sp,
+                        Icon(
+                            imageVector = Icons.Default.Menu,
+                            contentDescription = "Open Drawer",
                             modifier = Modifier.clickable {
-
                                 coroutineScope.launch {
                                     if (drawerState.isOpen) {
                                         drawerState.close()
