@@ -21,7 +21,6 @@ fun HomeScreen() {
             verticalArrangement = Arrangement.Center
         ) {
             Text(text = "Bienvenido al centro de salud")
-            // Puedes agregar más contenido aquí si lo deseas.
         }
     }
 }
