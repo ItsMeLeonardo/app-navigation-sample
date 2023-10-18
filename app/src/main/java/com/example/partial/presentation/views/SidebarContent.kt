@@ -16,21 +16,30 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.partial.domain.SubscriptionType
 import com.example.partial.presentation.navigation.ScreenRoutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SidebarContent(navController: NavController) {
+fun SidebarContent(navController: NavController, subscriptionType: SubscriptionType) {
 
-    val sidebarItems = listOf(
-        "Home",
-        "Patients",
-        "Doctors",
-        "Logout",
-        "Settings",
-        "Help"
-    )
+    val sidebarItems = when (subscriptionType) {
+        SubscriptionType.FREE -> listOf(
+            "Home",
+            "Logout",
+            "Settings",
+            "Help"
+        )
 
+        SubscriptionType.PREMIUM -> listOf(
+            "Home",
+            "Schedule",
+            "Shop List",
+            "Logout",
+            "Settings",
+            "Help"
+        )
+    }
     val selectedItem = remember { mutableStateOf(sidebarItems[0]) }
 
     Column(
@@ -54,8 +63,7 @@ fun SidebarContent(navController: NavController) {
                         "Patients" -> navController.navigate(ScreenRoutes.PatientsList)
                         "Doctors" -> navController.navigate(ScreenRoutes.DoctorsList)
                         "Logout" -> navController.navigate(ScreenRoutes.Login)
-//                        "Settings" -> navController.navigate(ScreenRoutes.Settings)
-//                        "Help" -> navController.navigate(ScreenRoutes.Help)
+
                     }
                 })
             Spacer(modifier = Modifier.height(16.dp))
@@ -68,6 +76,7 @@ fun SidebarContent(navController: NavController) {
 @Composable
 fun SidebarContentPreview() {
     SidebarContent(
-        navController = NavController(LocalContext.current)
+        navController = NavController(LocalContext.current),
+        subscriptionType = SubscriptionType.FREE
     )
 }

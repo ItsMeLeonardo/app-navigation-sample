@@ -11,7 +11,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.Text
+
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -21,7 +21,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -31,6 +30,9 @@ import com.example.partial.presentation.viewmodels.OtpViewModel
 import com.example.partial.presentation.views.*
 import kotlinx.coroutines.launch
 import androidx.compose.ui.graphics.Color
+import com.example.partial.domain.SubscriptionType
+import com.example.partial.domain.repository.InMemoryUserRepository
+import com.example.partial.presentation.viewmodels.RegisterViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 fun AppNavigator() {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val userRepository = InMemoryUserRepository()
 
     val currentRoute = remember { mutableStateOf<String?>(null) }
 
@@ -54,13 +57,17 @@ fun AppNavigator() {
     }
 
     val isDrawerEnabled =
-        currentRoute.value !in listOf(ScreenRoutes.Login, ScreenRoutes.OtpVerification)
+        currentRoute.value !in listOf(
+            ScreenRoutes.Login,
+            ScreenRoutes.OtpVerification,
+            ScreenRoutes.Register
+        )
 
     ScaffoldWithDrawer(
         navController = navController, drawerState = drawerState,
         isDrawerEnabled = isDrawerEnabled
     ) {
-        NavHost(navController = navController, startDestination = ScreenRoutes.Login) {
+        NavHost(navController = navController, startDestination = ScreenRoutes.Register) {
             composable(ScreenRoutes.Home) {
                 HomeScreen()
             }
@@ -74,7 +81,24 @@ fun AppNavigator() {
                 val viewModel = remember { LoginViewModel() }
                 LoginScreen(
                     viewModel = viewModel,
+                    onGoToRegister = {
+                        navController.navigate(ScreenRoutes.Register)
+                    },
                     onLoginSuccess = {
+                        navController.navigate(ScreenRoutes.OtpVerification)
+                    })
+
+            }
+
+            composable(ScreenRoutes.Register) {
+                val viewModel = remember { RegisterViewModel(userRepository) }
+                RegisterScreen(viewModel = viewModel,
+
+                    onGoToLogin = {
+                        navController.navigate(ScreenRoutes.Login)
+                    },
+
+                    onRegisterSuccess = {
                         navController.navigate(ScreenRoutes.OtpVerification)
                     })
             }
@@ -107,7 +131,7 @@ fun ScaffoldWithDrawer(
         drawerContent = {
             if (isDrawerEnabled) {
                 ModalDrawerSheet {
-                    SidebarContent(navController = navController)
+                    SidebarContent(navController = navController, subscriptionType = SubscriptionType.FREE)
                 }
             } else {
                 Box(modifier = Modifier.fillMaxSize())

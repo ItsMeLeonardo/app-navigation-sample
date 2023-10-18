@@ -1,5 +1,6 @@
 package com.example.partial.presentation.views
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -13,10 +14,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.sp
@@ -24,15 +27,22 @@ import com.example.partial.presentation.viewmodels.LoginViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(viewModel: LoginViewModel, onLoginSuccess: () -> Unit) {
+fun LoginScreen(
+    viewModel: LoginViewModel, onLoginSuccess: () -> Unit,
+    onGoToRegister: () -> Unit
+) {
     val username = viewModel.username
     val password = viewModel.password
+
+    val context = LocalContext.current
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -58,7 +68,7 @@ fun LoginScreen(viewModel: LoginViewModel, onLoginSuccess: () -> Unit) {
                     containerColor = Color.White,
                     unfocusedIndicatorColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,
-                    ),
+                ),
                 shape = RoundedCornerShape(8.dp),
 
                 )
@@ -89,6 +99,12 @@ fun LoginScreen(viewModel: LoginViewModel, onLoginSuccess: () -> Unit) {
                 onClick = {
                     if (viewModel.isValid()) {
                         onLoginSuccess()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Incorrect username or password! Please try again.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -100,6 +116,12 @@ fun LoginScreen(viewModel: LoginViewModel, onLoginSuccess: () -> Unit) {
             ) {
                 Text("Login")
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextButton(onClick = onGoToRegister) {
+                Text("Don't have an account? Register here!")
+            }
         }
     }
 }
@@ -108,5 +130,7 @@ fun LoginScreen(viewModel: LoginViewModel, onLoginSuccess: () -> Unit) {
 @Composable
 fun PreviewLoginScreen() {
     val viewModel = remember { LoginViewModel() }
-    LoginScreen(viewModel) {}
+    LoginScreen(viewModel,
+        onLoginSuccess = {}
+    ) {}
 }

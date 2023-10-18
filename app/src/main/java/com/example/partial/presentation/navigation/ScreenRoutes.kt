@@ -6,4 +6,5 @@ object ScreenRoutes {
     const val DoctorsList = "doctors_list"
     const val Login = "login"
     const val OtpVerification = "otp_verification"
+    const val Register = "register"
 }

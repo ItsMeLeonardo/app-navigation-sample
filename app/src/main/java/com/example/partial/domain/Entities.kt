@@ -13,3 +13,16 @@ data class Doctor(
     val lastName: String,
     val specialty: String
 )
+
+enum class SubscriptionType {
+    FREE,
+    PREMIUM
+}
+
+data class User(
+    val id: Int,
+    val username: String,
+    val email: String,
+    val password: String,
+    val subscriptionType: SubscriptionType
+)

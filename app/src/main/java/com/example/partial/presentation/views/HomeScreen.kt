@@ -20,7 +20,7 @@ fun HomeScreen() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(text = "Bienvenido al centro de salud")
+            Text(text = "Welcome to FOODFY!")
         }
     }
 }

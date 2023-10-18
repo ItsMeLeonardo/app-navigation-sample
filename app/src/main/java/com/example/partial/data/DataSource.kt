@@ -2,6 +2,8 @@ package com.example.partial.data
 
 import com.example.partial.domain.Doctor
 import com.example.partial.domain.Patient
+import com.example.partial.domain.SubscriptionType
+import com.example.partial.domain.User
 
 
 val patientsList = listOf(
@@ -12,4 +14,22 @@ val patientsList = listOf(
 val doctorsList = listOf(
     Doctor(id = 1, firstName = "Dr. Carl", lastName = "Johnson", specialty = "Cardiology"),
     Doctor(id = 2, firstName = "Dr. Anna", lastName = "Taylor", specialty = "Neurology"),
+)
+
+val userList = listOf(
+    User(
+        id = 1,
+        username = "john_doe",
+        email = "jhon@gmail.com",
+        password = "\$2a\$10\$CqWaZIpNIpIWh12wcVqrz.vX6kWox6g9VUIVpGH/tCKWzGgx.p.uG", // PXdC0^VK
+        SubscriptionType.FREE
+    ),
+
+    User(
+        id = 2,
+        username = "jane_smith",
+        email = "jane@gmail.com",
+        password = "\$2a\$10\$E6oBbmgHK0Mn/9hSW8wglu8EmSTr4TDs4ESw9zOfteXzg3xQjkl2W", // PXdC0^VK
+        SubscriptionType.PREMIUM
+    )
 )
