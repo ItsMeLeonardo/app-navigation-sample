@@ -16,6 +16,15 @@ class RegisterViewModel(private val userRepository: UserRepository) : ViewModel(
 
     val registrationStatus = MutableLiveData<String>()
 
+    fun isPasswordSecure(password: String): Boolean {
+        val hasUpperCase = password.any { it.isUpperCase() }
+        val hasLowerCase = password.any { it.isLowerCase() }
+        val hasDigit = password.any { it.isDigit() }
+        val hasSpecialCharacter = password.contains(Regex("[!@#$%^&*()-+=<>?]"))
+
+        return password.length >= 8 && hasUpperCase && hasLowerCase && hasDigit && hasSpecialCharacter
+    }
+
     fun register(): Boolean {
 
         val hashedPassword = hashPassword(password.value)

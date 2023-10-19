@@ -1,5 +1,6 @@
 package com.example.partial.presentation.views
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -25,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -42,6 +44,8 @@ fun RegisterScreen(
     viewModel: RegisterViewModel, onRegisterSuccess: () -> Unit,
     onGoToLogin: () -> Unit
 ) {
+
+    val context = LocalContext.current
 
     val passwordVisible = remember {
         mutableStateOf(false)
@@ -165,8 +169,17 @@ fun RegisterScreen(
 
             Button(
                 onClick = {
-                    if (viewModel.register()) {
-                        onRegisterSuccess()
+                    if (viewModel.isPasswordSecure(viewModel.password.value)) {
+                        if (viewModel.register()) {
+                            onRegisterSuccess()
+                        }
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit and one special character.",
+                            Toast.LENGTH_LONG
+                        )
+                            .show()
                     }
                 }, colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFFDD4343),
