@@ -31,6 +31,7 @@ import com.example.partial.presentation.views.*
 import kotlinx.coroutines.launch
 import androidx.compose.ui.graphics.Color
 import com.example.partial.domain.SubscriptionType
+import com.example.partial.domain.User
 import com.example.partial.domain.repository.InMemoryUserRepository
 import com.example.partial.presentation.viewmodels.RegisterViewModel
 
@@ -41,6 +42,7 @@ fun AppNavigator() {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val userRepository = InMemoryUserRepository()
+    val currentUser = remember { mutableStateOf<User?>(null) }
 
     val currentRoute = remember { mutableStateOf<String?>(null) }
 
@@ -65,7 +67,8 @@ fun AppNavigator() {
 
     ScaffoldWithDrawer(
         navController = navController, drawerState = drawerState,
-        isDrawerEnabled = isDrawerEnabled
+        isDrawerEnabled = isDrawerEnabled,
+        subscriptionType = currentUser.value?.subscriptionType ?: SubscriptionType.FREE
     ) {
         NavHost(navController = navController, startDestination = ScreenRoutes.Register) {
             composable(ScreenRoutes.Home) {
@@ -84,8 +87,11 @@ fun AppNavigator() {
                     onGoToRegister = {
                         navController.navigate(ScreenRoutes.Register)
                     },
-                    onLoginSuccess = {
-                        navController.navigate(ScreenRoutes.OtpVerification)
+                    onLoginSuccess = {user ->
+                        run {
+                            currentUser.value = user
+                            navController.navigate(ScreenRoutes.OtpVerification)
+                        }
                     })
 
             }
@@ -121,6 +127,7 @@ fun ScaffoldWithDrawer(
     navController: NavController,
     drawerState: DrawerState,
     isDrawerEnabled: Boolean,
+    subscriptionType: SubscriptionType = SubscriptionType.FREE,
     content: @Composable () -> Unit
 ) {
 
@@ -131,7 +138,7 @@ fun ScaffoldWithDrawer(
         drawerContent = {
             if (isDrawerEnabled) {
                 ModalDrawerSheet {
-                    SidebarContent(navController = navController, subscriptionType = SubscriptionType.FREE)
+                    SidebarContent(navController = navController, subscriptionType = subscriptionType)
                 }
             } else {
                 Box(modifier = Modifier.fillMaxSize())

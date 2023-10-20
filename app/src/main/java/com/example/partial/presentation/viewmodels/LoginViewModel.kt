@@ -19,4 +19,6 @@ class LoginViewModel : ViewModel() {
         return checkPassword(password.value, user.password)
     }
 
+    fun getUser() = userList.find { it.username == username.value }
+
 }

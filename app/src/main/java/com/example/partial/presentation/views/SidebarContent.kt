@@ -35,9 +35,9 @@ fun SidebarContent(navController: NavController, subscriptionType: SubscriptionT
             "Home",
             "Schedule",
             "Shop List",
-            "Logout",
             "Settings",
-            "Help"
+            "Help",
+            "Logout",
         )
     }
     val selectedItem = remember { mutableStateOf(sidebarItems[0]) }

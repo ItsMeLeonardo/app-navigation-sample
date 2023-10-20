@@ -12,7 +12,7 @@ fun checkPassword(plainTextPassword: String, hashedPassword: String): Boolean {
 
 
 fun generateSecurePassword(
-    length: Int = 10,
+    length: Int = 12,
 
     ): String {
     val password = StringBuilder(length)

@@ -23,12 +23,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.sp
+import com.example.partial.domain.User
 import com.example.partial.presentation.viewmodels.LoginViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel, onLoginSuccess: () -> Unit,
+    viewModel: LoginViewModel,
+    onLoginSuccess: (loggedUser: User) -> Unit,
     onGoToRegister: () -> Unit
 ) {
     val username = viewModel.username
@@ -97,8 +99,9 @@ fun LoginScreen(
 
             Button(
                 onClick = {
-                    if (viewModel.isValid()) {
-                        onLoginSuccess()
+                    val user = viewModel.getUser()
+                    if (viewModel.isValid() && user != null) {
+                        onLoginSuccess(user)
                     } else {
                         Toast.makeText(
                             context,
