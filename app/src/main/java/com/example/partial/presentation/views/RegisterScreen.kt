@@ -138,7 +138,7 @@ fun RegisterScreen(
                             contentDescription = "Suggest secure password",
                             modifier = Modifier
                                 .clickable {
-                                    val securePassword = generateSecurePassword(10)
+                                    val securePassword = generateSecurePassword(20)
                                     viewModel.password.value = securePassword
                                     passwordVisible.value = true
                                 }
@@ -194,7 +194,7 @@ fun RegisterScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(text = viewModel.registrationStatus.value ?: "")
+            Text(text = viewModel.registrationStatus.value)
 
             Spacer(modifier = Modifier.height(16.dp))
 

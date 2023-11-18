@@ -70,7 +70,7 @@ fun AppNavigator() {
         isDrawerEnabled = isDrawerEnabled,
         subscriptionType = currentUser.value?.subscriptionType ?: SubscriptionType.FREE
     ) {
-        NavHost(navController = navController, startDestination = ScreenRoutes.Register) {
+        NavHost(navController = navController, startDestination = ScreenRoutes.Home) {
             composable(ScreenRoutes.Home) {
                 HomeScreen()
             }

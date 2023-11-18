@@ -22,7 +22,7 @@ val userList = listOf(
         username = "john_doe",
         email = "jhon@gmail.com",
         password = "\$2a\$10\$CqWaZIpNIpIWh12wcVqrz.vX6kWox6g9VUIVpGH/tCKWzGgx.p.uG", // PXdC0^VK
-        SubscriptionType.FREE
+        SubscriptionType.PREMIUM
     ),
 
     User(

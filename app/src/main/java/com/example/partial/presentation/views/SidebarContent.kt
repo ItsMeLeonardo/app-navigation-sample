@@ -26,9 +26,9 @@ fun SidebarContent(navController: NavController, subscriptionType: SubscriptionT
     val sidebarItems = when (subscriptionType) {
         SubscriptionType.FREE -> listOf(
             "Home",
-            "Logout",
             "Settings",
-            "Help"
+            "Help",
+            "Logout",
         )
 
         SubscriptionType.PREMIUM -> listOf(
