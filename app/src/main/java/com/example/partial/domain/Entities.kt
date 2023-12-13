@@ -1,18 +1,7 @@
 package com.example.partial.domain
 
-data class Patient(
-    val id: Int,
-    val firstName: String,
-    val lastName: String,
-    val age: Int
-)
+import kotlinx.serialization.Serializable
 
-data class Doctor(
-    val id: Int,
-    val firstName: String,
-    val lastName: String,
-    val specialty: String
-)
 
 enum class SubscriptionType {
     FREE,
@@ -25,4 +14,26 @@ data class User(
     val email: String,
     val password: String,
     val subscriptionType: SubscriptionType
+)
+
+@Serializable
+data class Ingredient(
+    val name: String,
+    val obtained: Boolean = false
+)
+
+data class Recipe(
+    val id: Int,
+    val name: String,
+    val ingredients: List<Ingredient>
+)
+
+data class RecipeDetail(
+    val id: Int,
+    val name: String,
+    val description: String,
+//    val ingredients: List<Ingredient>,
+    val steps: List<String>,
+    val time: Int,
+    val kcal: Int,
 )

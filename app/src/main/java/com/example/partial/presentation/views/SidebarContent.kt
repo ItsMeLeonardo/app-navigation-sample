@@ -60,8 +60,6 @@ fun SidebarContent(navController: NavController, subscriptionType: SubscriptionT
                 onClick = {
                     when (item) {
                         "Home" -> navController.navigate(ScreenRoutes.Home)
-                        "Patients" -> navController.navigate(ScreenRoutes.PatientsList)
-                        "Doctors" -> navController.navigate(ScreenRoutes.DoctorsList)
                         "Logout" -> navController.navigate(ScreenRoutes.Login)
 
                     }

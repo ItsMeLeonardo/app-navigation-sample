@@ -30,6 +30,9 @@ import com.example.partial.presentation.viewmodels.OtpViewModel
 import com.example.partial.presentation.views.*
 import kotlinx.coroutines.launch
 import androidx.compose.ui.graphics.Color
+import com.example.partial.domain.Ingredient
+import com.example.partial.domain.Recipe
+import com.example.partial.domain.RecipeDetail
 import com.example.partial.domain.SubscriptionType
 import com.example.partial.domain.User
 import com.example.partial.domain.repository.InMemoryUserRepository
@@ -43,6 +46,11 @@ fun AppNavigator() {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val userRepository = InMemoryUserRepository()
     val currentUser = remember { mutableStateOf<User?>(null) }
+    val ingredientsList = remember { mutableStateOf<List<Ingredient>>(listOf()) }
+    val photoUrl = remember { mutableStateOf<String>("") }
+
+    val recipeList = remember { mutableStateOf<List<Recipe>>(listOf()) }
+    val currentRecipe = remember { mutableStateOf<RecipeDetail?>(null) }
 
     val currentRoute = remember { mutableStateOf<String?>(null) }
 
@@ -70,16 +78,15 @@ fun AppNavigator() {
         isDrawerEnabled = isDrawerEnabled,
         subscriptionType = currentUser.value?.subscriptionType ?: SubscriptionType.FREE
     ) {
-        NavHost(navController = navController, startDestination = ScreenRoutes.Home) {
+        NavHost(navController = navController, startDestination = ScreenRoutes.Login) {
             composable(ScreenRoutes.Home) {
-                HomeScreen()
+                HomeScreen { ingredients, imageUrl ->
+                    ingredientsList.value = ingredients
+                    photoUrl.value = imageUrl
+                    navController.navigate(ScreenRoutes.IngredientList)
+                }
             }
-            composable(ScreenRoutes.PatientsList) {
-                PatientsListScreen()
-            }
-            composable(ScreenRoutes.DoctorsList) {
-                DoctorsListScreen()
-            }
+
             composable(ScreenRoutes.Login) {
                 val viewModel = remember { LoginViewModel() }
                 LoginScreen(
@@ -87,7 +94,7 @@ fun AppNavigator() {
                     onGoToRegister = {
                         navController.navigate(ScreenRoutes.Register)
                     },
-                    onLoginSuccess = {user ->
+                    onLoginSuccess = { user ->
                         run {
                             currentUser.value = user
                             navController.navigate(ScreenRoutes.OtpVerification)
@@ -116,6 +123,34 @@ fun AppNavigator() {
                 })
             }
 
+            composable(ScreenRoutes.IngredientList) {
+                IngredientListScreen(
+                    photoUrl = photoUrl.value,
+                    ingredients = ingredientsList.value,
+                    onGetRecipes = {
+                        recipeList.value = it
+                        navController.navigate(ScreenRoutes.RecipeList)
+                    }
+                )
+            }
+
+            composable(ScreenRoutes.RecipeList) {
+                RecipesScreen(
+                    recipes = recipeList.value,
+                    onRecipeSelected = {
+
+                        currentRecipe.value = it
+                        navController.navigate(ScreenRoutes.RecipeDetail)
+                    }
+                )
+            }
+
+            composable(ScreenRoutes.RecipeDetail) {
+                RecipeDetailScreen(
+                    recipe = currentRecipe.value!!,
+                )
+            }
+
 
         }
     }
@@ -138,7 +173,10 @@ fun ScaffoldWithDrawer(
         drawerContent = {
             if (isDrawerEnabled) {
                 ModalDrawerSheet {
-                    SidebarContent(navController = navController, subscriptionType = subscriptionType)
+                    SidebarContent(
+                        navController = navController,
+                        subscriptionType = subscriptionType
+                    )
                 }
             } else {
                 Box(modifier = Modifier.fillMaxSize())

@@ -2,6 +2,7 @@ package com.example.partial.presentation.views
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
@@ -9,21 +10,32 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.sp
 import com.example.partial.domain.User
+import com.example.partial.domain.security.generateSecurePassword
 import com.example.partial.presentation.viewmodels.LoginViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,6 +49,11 @@ fun LoginScreen(
     val password = viewModel.password
 
     val context = LocalContext.current
+
+
+    val passwordVisible = remember {
+        mutableStateOf(false)
+    }
 
     Box(
         modifier = Modifier
@@ -76,23 +93,43 @@ fun LoginScreen(
                 )
 
             Spacer(modifier = Modifier.height(8.dp))
-
             TextField(
                 value = password.value,
                 onValueChange = { password.value = it },
                 label = { Text("Password") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 maxLines = 1,
                 singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Transparent),
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.White,
                     unfocusedIndicatorColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,
                 ),
-                visualTransformation = PasswordVisualTransformation(),
                 shape = RoundedCornerShape(8.dp),
+                visualTransformation = if (passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
+
+                trailingIcon = {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 4.dp)
+                    ) {
+
+                        val imageVector: ImageVector =
+                            if (passwordVisible.value) Icons.Default.VisibilityOff
+                            else Icons.Default.Visibility
+                        Icon(
+                            imageVector = imageVector,
+                            contentDescription = if (passwordVisible.value) "Ocultar contraseña" else "Mostrar contraseña",
+                            modifier = Modifier
+                                .clickable { passwordVisible.value = !passwordVisible.value }
+                                .padding(12.dp)
+                                .size(24.dp)
+                        )
+                    }
+
+                }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
